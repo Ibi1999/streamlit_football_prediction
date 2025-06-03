@@ -10,7 +10,7 @@ features = pd.read_pickle('features.pkl')
 with st.sidebar:
     st.markdown("<small>Created by Ibrahim Oksuzoglu</small>", unsafe_allow_html=True)
     st.title("🤖 Machine learning")
-    model_type = st.selectbox("🧠 Select prediction Model type:", ("TensorFlow", "GLM - Poisson"))
+    model_type = st.selectbox("🧠 Select prediction Model type:", ("TensorFlow", "GLM - Poisson"), index=0)
 
     with st.expander("❓ What this app does", expanded=False): 
         st.markdown("""
@@ -22,13 +22,12 @@ with st.sidebar:
 # --- Main Content ---
 if model_type in ("TensorFlow", "GLM - Poisson"):
     emoji_map = {
-        "TensorFlow": "🚀",      # Orange diamond
-        "GLM - Poisson": "📐"    # Bar chart (or choose another suitable emoji)
+        "TensorFlow": "🚀",
+        "GLM - Poisson": "📐"
     }
     st.title(f"{emoji_map[model_type]} {model_type} Regression Model")
 
-
-    iteration_count = st.selectbox("🔁 Select Number of Simulations", ("10", "50", "100", "500"))
+    iteration_count = st.selectbox("🔁 Select Number of Simulations", ("10", "50", "100", "500"), index=2)
 
     @st.cache_data
     def load_final_table(model_type, iteration_count):
@@ -71,7 +70,7 @@ if model_type in ("TensorFlow", "GLM - Poisson"):
     accuracy_scores = evaluate_model_accuracy(features, match_predictions)
     actual_table_df = create_actual_league_table(features)
 
-    # --- Show Accuracy Metrics Just After Simulation Selection ---
+    # --- Show Accuracy Metrics ---
     st.markdown("### 📈 Prediction Accuracy Metrics")
     col_acc1, col_acc2, col_acc3 = st.columns(3)
     with col_acc1:
@@ -89,9 +88,9 @@ if model_type in ("TensorFlow", "GLM - Poisson"):
 
     col1, col2 = st.columns(2)
     with col1:
-        selected_home_team = st.selectbox("Select Home Team", team_list)
+        selected_home_team = st.selectbox("Select Home Team", team_list, index=team_list.index("Arsenal"))
     with col2:
-        selected_away_team = st.selectbox("Select Away Team", team_list)
+        selected_away_team = st.selectbox("Select Away Team", team_list, index=team_list.index("Tottenham"))
 
     if selected_home_team and selected_away_team:
         if selected_home_team == selected_away_team:
@@ -128,13 +127,12 @@ if model_type in ("TensorFlow", "GLM - Poisson"):
                         st.metric(label="Outcome", value=comparison_result['actual_result'])
 
     st.markdown("---")
-    # --- Layout: Three Columns for Tables ---
+    # --- Layout: Two Columns for Tables ---
     col1, col2 = st.columns([1.5, 1.5])
 
     with col1:
         st.subheader("📊 Predicted League Table")
 
-        # Convert float columns to integers for cleaner display
         int_cols = final_table_df.select_dtypes(include='number').columns
         final_table_display = final_table_df.copy()
         final_table_display[int_cols] = final_table_display[int_cols].round(0).astype(int)
