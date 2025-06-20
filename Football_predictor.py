@@ -3,7 +3,8 @@ import pandas as pd
 from predictor_func import *
 import matplotlib.pyplot as plt
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide",
+                  initial_sidebar_state="expanded")
 features = pd.read_pickle('features.pkl')
 
 # --- Sidebar ---
